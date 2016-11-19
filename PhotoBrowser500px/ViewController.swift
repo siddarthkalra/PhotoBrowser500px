@@ -14,9 +14,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        Alamofire.request("https://httpbin.org/get").responseString { (str: DataResponse<String>) in
-            debugPrint("response here")
-            debugPrint(str)
+        
+        
+        let CONSUMER_KEY = "fuxM7DPmpU4dQuFubUbQYOcLRUbeQBOGtqlzl56r"
+        let parameters: Parameters = ["consumer_key": CONSUMER_KEY,
+                                      "feature": "fresh_today",
+                                      "image_size": 440,
+                                      "exclude": "Nude"]
+        
+//        Alamofire.request("https://api.500px.com/v1/photos", parameters: parameters).responseString { (str: DataResponse<String>) in
+//            debugPrint("response here")
+//            debugPrint(str)
+//        }
+        
+        Alamofire.request("https://api.500px.com/v1/photos", parameters: parameters).responseJSON { (json: DataResponse<Any>) in
+            debugPrint("json response here")
+            debugPrint(json)
+            //json.result.value! as! NSDictionary)["photos"]
         }
     }
 
