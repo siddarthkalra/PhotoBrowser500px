@@ -69,12 +69,59 @@ class API500pxTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         
-        let asyncExpectation = expectation(description: "API500px Fresh Today with size 2")
+        let asyncExpectation = expectation(description: "API500px Popular with size 2")
         
         API500px.getPhotos(withFeature: .popular, withSize: .two, completionHandler: { (response: API500px.APIImageResponse) -> Void in
             XCTAssertTrue(response.images != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue((response.images?.count)! > 0)
+            XCTAssertTrue(response.images?.first?.curSize == API500px.ImageSize.two)
+            XCTAssertTrue(response.images?.first?.feature == API500px.Feature.popular)
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testGetPhotosPopularAnimals() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "API500px Popular animals with size 2")
+        
+        API500px.getPhotos(withFeature: .popular, withCategory: .animals, withSize: .two, completionHandler: { (response: API500px.APIImageResponse) -> Void in
+            XCTAssertTrue(response.images != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.images?.count)! > 0)
+            XCTAssertTrue(response.images?.first?.curSize == API500px.ImageSize.two)
+            XCTAssertTrue(response.images?.first?.feature == API500px.Feature.popular)
+            XCTAssertTrue(response.images?.first?.category == API500px.Category.animals)
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testGetPhotosWithResultCount57() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "API500px Popular animals with size 2")
+        
+        API500px.getPhotos(withFeature: .popular, withSize: .two, withResultCount: 57, completionHandler: { (response: API500px.APIImageResponse) -> Void in
+            XCTAssertTrue(response.images != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.images?.count)! == 57)
             XCTAssertTrue(response.images?.first?.curSize == API500px.ImageSize.two)
             XCTAssertTrue(response.images?.first?.feature == API500px.Feature.popular)
             

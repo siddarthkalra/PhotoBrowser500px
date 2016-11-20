@@ -29,7 +29,7 @@ struct Image500px {
     let timesViewed: Int
     let rating: Float
     let created_at: Date
-    let category: Int
+    let category: API500px.Category
     let privacy: Bool
     let origWidth: Int
     let origHeight: Int

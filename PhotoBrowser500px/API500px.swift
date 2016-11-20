@@ -12,6 +12,7 @@ class API500px {
     
     static let API_URL = "https://api.500px.com/v1/"
     static let PHOTOS_END_POINT = "photos"
+    static let MAX_PHOTO_RESULT_ALLOWED = 100
     
     static let kCONSUMER_KEY = "consumer_key"
     static let kFEATURE = "feature"
@@ -34,6 +35,8 @@ class API500px {
     static let kCOMMENTS_COUNT = "comments_count"
     static let kNSFW = "nsfw"
     static let kIMAGE_URL = "image_url"
+    static let kRPP = "rpp" // # of results to return
+    static let kONLY = "only" // used to filter results by category
     
     static let CONSUMER_KEY = "fuxM7DPmpU4dQuFubUbQYOcLRUbeQBOGtqlzl56r"
     
@@ -57,6 +60,72 @@ class API500px {
             case .freshToday: return "fresh_today"
             case .freshYesterday: return "fresh_yesterday"
             case .freshWeek: return "fresh_week"
+            }
+        }
+    }
+    
+    enum Category: Int {
+        case notSet = -1
+        case uncategorized = 0
+        case abstract = 10
+        case animals = 11
+        case blackAndWhite = 5
+        case celebrities = 1
+        case cityAndArchitecture = 9
+        case commercial = 15
+        case concert = 16
+        case family = 20
+        case fashion = 14
+        case film = 2
+        case fineArt = 24
+        case food = 23
+        case journalism = 3
+        case landscapes = 8
+        case macro = 12
+        case nature = 18
+        case nude = 4
+        case people = 7
+        case performingArts = 19
+        case sport = 17
+        case stillLife = 6
+        case street = 21
+        case transportation = 26
+        case travel = 13
+        case underwater = 22
+        case urbanExploration = 27
+        case wedding = 25
+        
+        var description : String {
+            switch self {
+            case .notSet: return "Not set"
+            case .uncategorized: return "Uncategorized"
+            case .abstract: return "Abstract"
+            case .animals: return "Animals"
+            case .blackAndWhite: return "Black and White"
+            case .celebrities: return "Celebrities"
+            case .cityAndArchitecture: return "City and Architecture"
+            case .commercial: return "Commercial"
+            case .concert: return "Concert"
+            case .family: return "Family"
+            case .fashion: return "Fashion"
+            case .film: return "Film"
+            case .fineArt: return "Fine Art"
+            case .food: return "Food"
+            case .journalism: return "Journalism"
+            case .landscapes: return "Landscapes"
+            case .macro: return "Macro"
+            case .nature: return "Nature"
+            case .nude: return "Nude"
+            case .people: return "People"
+            case .performingArts: return "PerformingArts"
+            case .sport: return "Sport"
+            case .stillLife: return "Still Life"
+            case .street: return "Street"
+            case .transportation: return "Transportation"
+            case .travel: return "Travel"
+            case .underwater: return "Underwater"
+            case .urbanExploration: return "Urban Exploration"
+            case .wedding: return "Wedding"
             }
         }
     }
@@ -85,15 +154,29 @@ class API500px {
     // Runs asynchronously on a background thread
     // Results are also returned on a background thread
     class func getPhotos(withFeature feature: Feature = .freshToday,
+                         withCategory category: Category = .notSet,
                          withSize size: ImageSize = .fourHundredForty,
+                         withResultCount resultCount: Int = -1,
                          withQos qos: DispatchQoS.QoSClass = .userInitiated,
                          completionHandler: @escaping (APIImageResponse) -> Void)
     {
         DispatchQueue.global(qos: qos).async {
-            let parameters: Dictionary<String, Any> = [API500px.kCONSUMER_KEY: CONSUMER_KEY,
+            var parameters: Dictionary<String, Any> = [API500px.kCONSUMER_KEY: CONSUMER_KEY,
                                                        API500px.kFEATURE: feature.description,
                                                        API500px.kIMAGE_SIZE: size.rawValue,
                                                        API500px.kEXCLUDE: "Nude"]
+            if category != .notSet {
+                parameters[API500px.kONLY] = category.description
+            }
+            if resultCount > 0 {
+                var actualResultCount = resultCount
+                
+                if actualResultCount > API500px.MAX_PHOTO_RESULT_ALLOWED {
+                   actualResultCount = API500px.MAX_PHOTO_RESULT_ALLOWED
+                }
+                
+                parameters[API500px.kRPP] = actualResultCount
+            }
             
             let photosEndPoint = URL(string: API500px.API_URL + API500px.PHOTOS_END_POINT)
             HTTPClient.request(photosEndPoint!, method: .get, parameters: parameters, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
@@ -156,13 +239,21 @@ class API500px {
             }
         }
         
+        // Get the category
+        var category: Category = .notSet
+        if let categoryInt = imageInfo[API500px.kCATEGORY] {
+            if let categoryEnum = Category(rawValue: categoryInt as! Int) {
+                category = categoryEnum
+            }
+        }
+        
         return Image500px(id: imageInfo[API500px.kID] as! Int,
                           name: imageInfo[API500px.kNAME] as! String,
                           description: imageInfo[API500px.kDESCRIPTION] as? String,
                           timesViewed: imageInfo[API500px.kTIMES_VIEWED] as! Int,
                           rating: imageInfo[API500px.kRATING] as! Float,
                           created_at: DateHelper.dateFromISO8601String(imageInfo[API500px.kCREATED_AT] as! String),
-                          category: imageInfo[API500px.kCATEGORY] as! Int,
+                          category: category,
                           privacy: (imageInfo[API500px.kPRIVACY] != nil),
                           origWidth: imageInfo[API500px.kWIDTH] as! Int,
                           origHeight: imageInfo[API500px.kHEIGHT] as! Int,
