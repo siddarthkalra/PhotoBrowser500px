@@ -16,7 +16,7 @@ class ImageCollectionViewController: UICollectionViewController {
 
     // MARK: - Public Members
     
-    let imageResults: [Image500px] = []
+    var imageResults: [Image500px] = []
     let imageFetcher = ImageFetcher()
     
     // MARK: - Private Members
@@ -47,12 +47,40 @@ class ImageCollectionViewController: UICollectionViewController {
         // Register cell classes
         //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
-        // Do any additional setup after loading the view.
+        //self.collectionView.section
+        let layout = self.flowLayout
+        layout.minimumLineSpacing = 0.5
+        layout.minimumInteritemSpacing = 0.5
+        layout.sectionInset = UIEdgeInsetsMake(5, 5, 5, 5)
+//        let itemInfo = self.itemSize(inBoundingSize: size)
+//        layout.minimumLineSpacing = CGFloat(itemInfo.lineSpacing)
+//        layout.itemSize = itemInfo.itemSize
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        API500px.getPhotos { (response: API500px.APIImageResponse) in
+            if let error = response.error {
+                // error - show UI with the ability to refresh
+                // TODO
+            }
+            else if let result = response.images {
+                self.imageResults = result
+                self.collectionView?.reloadData()
+            }
+            else {
+                // response was nil - show UI with the ability to refresh
+                // TODO
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        self.imageFetcher.purgeCache()
     }
 
     // MARK: UICollectionViewDataSource
@@ -68,7 +96,6 @@ class ImageCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewController.CELL_ID, for: indexPath)
     
-        
             let image500px = self.imageResults[indexPath.row]
                 imageFetcher.fetchImage(urlString: image500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
                     if let error = response.error {
@@ -99,12 +126,11 @@ class ImageCollectionViewController: UICollectionViewController {
                     }
                 })
     
-    
         return cell
     }
 
     // MARK: UICollectionViewDelegate
-
+    
     /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
