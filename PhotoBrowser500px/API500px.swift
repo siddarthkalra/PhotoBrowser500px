@@ -72,6 +72,7 @@ class API500px {
     }
     
     enum API500pxError: Error {
+        case noData
         case responseKeyMissing(requiredKey: String)
         case networkingFailure(httpClientError: Error)
     }
@@ -94,8 +95,8 @@ class API500px {
                                                        API500px.kIMAGE_SIZE: size.rawValue,
                                                        API500px.kEXCLUDE: "Nude"]
             
-            let photosEndPoint = API500px.API_URL + API500px.PHOTOS_END_POINT
-            HTTPClient.request(photosEndPoint, method: .get, parameters: parameters, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+            let photosEndPoint = URL(string: API500px.API_URL + API500px.PHOTOS_END_POINT)
+            HTTPClient.request(photosEndPoint!, method: .get, parameters: parameters, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
                 if let error = response.error {
                     let error500pxAPI = API500pxError.networkingFailure(httpClientError: error)
                     completionHandler(APIImageResponse(images: nil, error: error500pxAPI))
@@ -117,6 +118,10 @@ class API500px {
                     else {
                         completionHandler(APIImageResponse(images: nil, error: API500pxError.responseKeyMissing(requiredKey: kPHOTOS)))
                     }
+                }
+                else {
+                    // failure - response.data is nil
+                    completionHandler(APIImageResponse(images: nil, error: .noData))
                 }
             })
         }
@@ -165,7 +170,7 @@ class API500px {
                           votesCount: imageInfo[API500px.kVOTES_COUNT] as! Int,
                           commentsCount: imageInfo[API500px.kCOMMENTS_COUNT] as! Int,
                           nsfw: imageInfo[API500px.kNSFW] as! Bool,
-                          imageURL: URL(string: imageInfo[API500px.kIMAGE_URL] as! String)!,
+                          imageURL: imageInfo[API500px.kIMAGE_URL] as! String,
                           feature: feature)
     }
 }
