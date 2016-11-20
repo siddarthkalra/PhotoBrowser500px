@@ -28,7 +28,7 @@ class HTTPClientTests: XCTestCase {
         
         let asyncExpectation = expectation(description: "HTTPClient Get No Params")
         
-        HTTPClient.request("https://httpbin.org/get", completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+        HTTPClient.request(URL(string: "https://httpbin.org/get")!, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
             XCTAssertTrue(response.data != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/get")
@@ -49,7 +49,7 @@ class HTTPClientTests: XCTestCase {
         
         let asyncExpectation = expectation(description: "HTTPClient Get With Params")
         
-        HTTPClient.request("https://httpbin.org/get", parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+        HTTPClient.request(URL(string: "https://httpbin.org/get")!, parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
             XCTAssertTrue(response.data != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/get")
@@ -70,7 +70,7 @@ class HTTPClientTests: XCTestCase {
         
         let asyncExpectation = expectation(description: "HTTPClient Post No Params")
         
-        HTTPClient.request("https://httpbin.org/post", method: .post, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+        HTTPClient.request(URL(string: "https://httpbin.org/post")!, method: .post, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
             XCTAssertTrue(response.data != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/post")
@@ -91,10 +91,52 @@ class HTTPClientTests: XCTestCase {
         
         let asyncExpectation = expectation(description: "HTTPClient Post With Params")
         
-        HTTPClient.request("https://httpbin.org/post", method: .post, parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+        HTTPClient.request(URL(string: "https://httpbin.org/post")!, method: .post, parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
             XCTAssertTrue(response.data != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/post")
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testRequestJpegData() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Request JPEG Data")
+        
+        HTTPClient.requestData(URL(string: "https://httpbin.org/image/jpeg")!, completionHandler: {(response: HTTPClient.HTTPDataResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.data?.count)! > 0)
+
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testRequestPngData() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Request PNG Data")
+        
+        HTTPClient.requestData(URL(string: "https://httpbin.org/image/png")!, completionHandler: {(response: HTTPClient.HTTPDataResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.data?.count)! > 0)
             
             asyncExpectation.fulfill()
         })

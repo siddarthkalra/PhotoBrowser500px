@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import PhotoBrowser500px
 
 class ImageFetcherTests: XCTestCase {
     
@@ -20,16 +21,49 @@ class ImageFetcherTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testFetchPngImage() {
+        
+        let asyncExpectation = expectation(description: "ImageFetcher Get PNG Image")
+        
+        let imageFetcher = ImageFetcher()
+        imageFetcher.fetchImage(urlString: "https://httpbin.org/image/png", completionHandler: { (response: ImageFetcher.ImageFetcherResponse) -> Void in
+            let zeroSize = CGSize(width: 0.0, height: 0.0)
+            
+            XCTAssertTrue(response.image != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.image?.size.width)! > zeroSize.width)
+            XCTAssertTrue((response.image?.size.height)! > zeroSize.height)
+
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
         }
     }
     
+    func testFetchJpegImage() {
+        
+        let asyncExpectation = expectation(description: "ImageFetcher Get JPEG Image")
+        
+        let imageFetcher = ImageFetcher()
+        imageFetcher.fetchImage(urlString: "https://httpbin.org/image/jpeg", completionHandler: { (response: ImageFetcher.ImageFetcherResponse) -> Void in
+            let zeroSize = CGSize(width: 0.0, height: 0.0)
+            
+            XCTAssertTrue(response.image != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.image?.size.width)! > zeroSize.width)
+            XCTAssertTrue((response.image?.size.height)! > zeroSize.height)
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
 }
