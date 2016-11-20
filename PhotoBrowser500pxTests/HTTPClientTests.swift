@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import Alamofire
+@testable import PhotoBrowser500px
 
 class HTTPClientTests: XCTestCase {
     
@@ -20,16 +22,87 @@ class HTTPClientTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testGetRequestNoParams() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Get No Params")
+        
+        HTTPClient.request("https://httpbin.org/get", completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/get")
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
         }
     }
     
+    func testGetRequestWithParams() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Get With Params")
+        
+        HTTPClient.request("https://httpbin.org/get", parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/get")
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testPostRequestNoParams() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Post No Params")
+        
+        HTTPClient.request("https://httpbin.org/post", method: .post, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/post")
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testPostRequestWithParams() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "HTTPClient Post With Params")
+        
+        HTTPClient.request("https://httpbin.org/post", method: .post, parameters: nil, completionHandler: {(response: HTTPClient.HTTPResponse) -> Void in
+            XCTAssertTrue(response.data != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue(response.data!["url"] as! String == "https://httpbin.org/post")
+            
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
 }
