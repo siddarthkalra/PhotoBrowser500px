@@ -14,6 +14,10 @@
 		F50BFAE21DE0FE8000CA454D /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50BFAE11DE0FE8000CA454D /* Reachability.swift */; };
 		F50BFAE41DE0FECD00CA454D /* API500px.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50BFAE31DE0FECD00CA454D /* API500px.swift */; };
 		F50BFAE61DE0FF8600CA454D /* Image500px.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50BFAE51DE0FF8600CA454D /* Image500px.swift */; };
+		F5A475721DE1303E00C15BE0 /* HTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475711DE1303E00C15BE0 /* HTTPClientTests.swift */; };
+		F5A475741DE1352300C15BE0 /* API500pxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475731DE1352300C15BE0 /* API500pxTests.swift */; };
+		F5A475761DE137A800C15BE0 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475751DE137A800C15BE0 /* DateHelper.swift */; };
+		F5A475791DE13A1600C15BE0 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */; };
 		F5E144A51DE0E873001C7EBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E144A41DE0E873001C7EBC /* AppDelegate.swift */; };
 		F5E144A71DE0E873001C7EBC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E144A61DE0E873001C7EBC /* ViewController.swift */; };
 		F5E144AA1DE0E873001C7EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5E144A81DE0E873001C7EBC /* Main.storyboard */; };
@@ -54,6 +58,10 @@
 		F50BFAE11DE0FE8000CA454D /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		F50BFAE31DE0FECD00CA454D /* API500px.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API500px.swift; sourceTree = "<group>"; };
 		F50BFAE51DE0FF8600CA454D /* Image500px.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image500px.swift; sourceTree = "<group>"; };
+		F5A475711DE1303E00C15BE0 /* HTTPClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPClientTests.swift; sourceTree = "<group>"; };
+		F5A475731DE1352300C15BE0 /* API500pxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API500pxTests.swift; sourceTree = "<group>"; };
+		F5A475751DE137A800C15BE0 /* DateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
+		F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
 		F5E144A11DE0E873001C7EBC /* PhotoBrowser500px.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoBrowser500px.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5E144A41DE0E873001C7EBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5E144A61DE0E873001C7EBC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -158,6 +166,14 @@
 			name = UserInterface;
 			sourceTree = "<group>";
 		};
+		F5A475771DE137B100C15BE0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F5A475751DE137A800C15BE0 /* DateHelper.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		F5E144981DE0E873001C7EBC = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +199,7 @@
 		F5E144A31DE0E873001C7EBC /* PhotoBrowser500px */ = {
 			isa = PBXGroup;
 			children = (
+				F5A475771DE137B100C15BE0 /* Utils */,
 				F50BFADC1DE0F8A200CA454D /* UserInterface */,
 				F50BFADA1DE0F88B00CA454D /* Services */,
 				F50BFAD91DE0F88400CA454D /* Models */,
@@ -199,6 +216,9 @@
 			children = (
 				F5E144BC1DE0E873001C7EBC /* PhotoBrowser500pxTests.swift */,
 				F5E144BE1DE0E873001C7EBC /* Info.plist */,
+				F5A475711DE1303E00C15BE0 /* HTTPClientTests.swift */,
+				F5A475731DE1352300C15BE0 /* API500pxTests.swift */,
+				F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */,
 			);
 			path = PhotoBrowser500pxTests;
 			sourceTree = "<group>";
@@ -497,6 +517,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F50BFAE41DE0FECD00CA454D /* API500px.swift in Sources */,
+				F5A475761DE137A800C15BE0 /* DateHelper.swift in Sources */,
 				F5E144AD1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld in Sources */,
 				F50BFAE21DE0FE8000CA454D /* Reachability.swift in Sources */,
 				F5E144A71DE0E873001C7EBC /* ViewController.swift in Sources */,
@@ -510,6 +531,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5A475721DE1303E00C15BE0 /* HTTPClientTests.swift in Sources */,
+				F5A475791DE13A1600C15BE0 /* DateHelperTests.swift in Sources */,
+				F5A475741DE1352300C15BE0 /* API500pxTests.swift in Sources */,
 				F5E144BD1DE0E873001C7EBC /* PhotoBrowser500pxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
