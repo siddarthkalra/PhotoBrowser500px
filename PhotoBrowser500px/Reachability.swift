@@ -9,7 +9,19 @@
 import Foundation
 
 class Reachability {
-    func isConnectedToNet() -> Bool {
-        return true
+    
+    enum NetworkStatus {
+        case notConnected
+        case connectionViaWiFi
+        case connectionViaWWAN
+    }
+    
+    class func isConnectedToNet() -> Bool {
+        let networkStatus = Reachability.isConnected()
+        return networkStatus == NetworkStatus.connectionViaWiFi || networkStatus == NetworkStatus.connectionViaWWAN
+    }
+    
+    class func isConnected() -> NetworkStatus {
+        return NetworkStatus.connectionViaWiFi
     }
 }
