@@ -17,6 +17,7 @@ class HTTPClient {
     }
     
     enum HTTPResponseError: Error {
+        case noConnection
         case dataEmpty
         case unexpectedDataType
         case validationFailure(internalError: Error)
@@ -27,6 +28,13 @@ class HTTPClient {
                  parameters: [String: Any]? = nil,
                  completionHandler: @escaping (HTTPResponse) -> Void)
     {
+        if !Reachability.isConnectedToNet() {
+            let error = HTTPResponseError.noConnection
+            completionHandler(HTTPResponse(data: nil, error: error))
+            
+            return
+        }
+        
         Alamofire.request(url, method: method, parameters: parameters).validate().responseJSON { (response: DataResponse<Any>) in
             switch response.result {
             case .success:
@@ -36,7 +44,6 @@ class HTTPClient {
                     if json is Dictionary<String, Any>
                     {
                         let data = json as! Dictionary<String, Any>
-                        //response.result.value! as! NSDictionary)["photos"]
                         completionHandler(HTTPResponse(data: data, error: nil))
                     }
                     else {
