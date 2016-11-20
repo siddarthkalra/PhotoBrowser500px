@@ -23,18 +23,20 @@ import Foundation
 //    "image_url": "http://pcdn.500px.net/4910421/c4a10b46e857e33ed2df35749858a7e45690dae7/2.jpg"
 
 struct Image500px {
-    let id: String
+    let id: Int
     let name: String
-    let description: String
+    let description: String?
     let timesViewed: Int
     let rating: Float
     let created_at: Date
     let category: Int
     let privacy: Bool
-    let width: Int
-    let height: Int
+    let origWidth: Int
+    let origHeight: Int
+    let curSize: API500px.ImageSize
     let votesCount: Int
     let commentsCount: Int
     let nsfw: Bool
     let imageURL: URL
+    let feature: API500px.Feature
 }
