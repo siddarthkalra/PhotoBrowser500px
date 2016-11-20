@@ -8,10 +8,36 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
-
 class ImageCollectionViewController: UICollectionViewController {
+    
+    // MARK: - Constants
+    static let CELL_ID = "imageCell"
+    static let TAG_CELL_IMAGE = 1
 
+    // MARK: - Public Members
+    
+    let imageResults: [Image500px] = []
+    let imageFetcher = ImageFetcher()
+    
+    // MARK: - Private Members
+    
+    private var flowLayout: UICollectionViewFlowLayout {
+        return collectionViewLayout as! UICollectionViewFlowLayout
+    }
+    
+    // MARK: - Private Methods
+    
+    private func imageView(withCell cell: UICollectionViewCell) -> UIImageView? {
+        let cellSubviewOptional = cell.viewWithTag(ImageCollectionViewController.TAG_CELL_IMAGE)
+        
+        if let cellSubview = cellSubviewOptional {
+            return cellSubview as? UIImageView
+        }
+        else {
+            return nil
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,7 +45,7 @@ class ImageCollectionViewController: UICollectionViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
     }
@@ -29,33 +55,50 @@ class ImageCollectionViewController: UICollectionViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
+        return self.imageResults.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewController.CELL_ID, for: indexPath)
     
-        // Configure the cell
+        
+            let image500px = self.imageResults[indexPath.row]
+                imageFetcher.fetchImage(urlString: image500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
+                    if let error = response.error {
+                        // failure
+                        // TODO show error to user?
+                        debugPrint("error in retrieving image: \(error)")
+                    }
+                    else {
+                        if let retrievedImageIndexPath = response.tag
+                        {
+                            if retrievedImageIndexPath is IndexPath {    
+                                if let retrievedCell = collectionView.cellForItem(at: retrievedImageIndexPath as! IndexPath) {
+                                    if let imageView = self.imageView(withCell: retrievedCell) {
+                                        imageView.image = response.image
+                                    }
+                                    else {
+                                        debugPrint("Image view not found in cell")
+                                    }
+                                }
+                            }
+                            else {
+                                debugPrint("Tag is not an index path")
+                            }
+                        }
+                        else {
+                            debugPrint("Tag is nil")
+                        }
+                    }
+                })
+    
     
         return cell
     }
@@ -91,4 +134,13 @@ class ImageCollectionViewController: UICollectionViewController {
     }
     */
 
+    /*
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using [segue destinationViewController].
+     // Pass the selected object to the new view controller.
+     }
+     */
 }
