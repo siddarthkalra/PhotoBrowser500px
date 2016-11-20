@@ -18,8 +18,10 @@
 		F5A475741DE1352300C15BE0 /* API500pxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475731DE1352300C15BE0 /* API500pxTests.swift */; };
 		F5A475761DE137A800C15BE0 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475751DE137A800C15BE0 /* DateHelper.swift */; };
 		F5A475791DE13A1600C15BE0 /* DateHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */; };
+		F5A4757B1DE2101A00C15BE0 /* ImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */; };
+		F5A4757D1DE219CC00C15BE0 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757C1DE219CC00C15BE0 /* ImageFetcher.swift */; };
+		F5A4757F1DE2329C00C15BE0 /* ImageFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757E1DE2329C00C15BE0 /* ImageFetcherTests.swift */; };
 		F5E144A51DE0E873001C7EBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E144A41DE0E873001C7EBC /* AppDelegate.swift */; };
-		F5E144A71DE0E873001C7EBC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E144A61DE0E873001C7EBC /* ViewController.swift */; };
 		F5E144AA1DE0E873001C7EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5E144A81DE0E873001C7EBC /* Main.storyboard */; };
 		F5E144AD1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5E144AB1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld */; };
 		F5E144AF1DE0E873001C7EBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5E144AE1DE0E873001C7EBC /* Assets.xcassets */; };
@@ -62,9 +64,11 @@
 		F5A475731DE1352300C15BE0 /* API500pxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API500pxTests.swift; sourceTree = "<group>"; };
 		F5A475751DE137A800C15BE0 /* DateHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateHelperTests.swift; sourceTree = "<group>"; };
+		F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewController.swift; sourceTree = "<group>"; };
+		F5A4757C1DE219CC00C15BE0 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
+		F5A4757E1DE2329C00C15BE0 /* ImageFetcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcherTests.swift; sourceTree = "<group>"; };
 		F5E144A11DE0E873001C7EBC /* PhotoBrowser500px.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoBrowser500px.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5E144A41DE0E873001C7EBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F5E144A61DE0E873001C7EBC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		F5E144A91DE0E873001C7EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F5E144AC1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PhotoBrowser500px.xcdatamodel; sourceTree = "<group>"; };
 		F5E144AE1DE0E873001C7EBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -152,6 +156,7 @@
 				F50BFADD1DE0FE4700CA454D /* HTTPClient.swift */,
 				F50BFAE11DE0FE8000CA454D /* Reachability.swift */,
 				F50BFAE31DE0FECD00CA454D /* API500px.swift */,
+				F5A4757C1DE219CC00C15BE0 /* ImageFetcher.swift */,
 			);
 			name = Networking;
 			sourceTree = "<group>";
@@ -159,9 +164,9 @@
 		F50BFADC1DE0F8A200CA454D /* UserInterface */ = {
 			isa = PBXGroup;
 			children = (
-				F5E144A61DE0E873001C7EBC /* ViewController.swift */,
 				F5E144A81DE0E873001C7EBC /* Main.storyboard */,
 				F5E144B01DE0E873001C7EBC /* LaunchScreen.storyboard */,
+				F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */,
 			);
 			name = UserInterface;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 				F5A475711DE1303E00C15BE0 /* HTTPClientTests.swift */,
 				F5A475731DE1352300C15BE0 /* API500pxTests.swift */,
 				F5A475781DE13A1600C15BE0 /* DateHelperTests.swift */,
+				F5A4757E1DE2329C00C15BE0 /* ImageFetcherTests.swift */,
 			);
 			path = PhotoBrowser500pxTests;
 			sourceTree = "<group>";
@@ -519,8 +525,9 @@
 				F50BFAE41DE0FECD00CA454D /* API500px.swift in Sources */,
 				F5A475761DE137A800C15BE0 /* DateHelper.swift in Sources */,
 				F5E144AD1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld in Sources */,
+				F5A4757D1DE219CC00C15BE0 /* ImageFetcher.swift in Sources */,
 				F50BFAE21DE0FE8000CA454D /* Reachability.swift in Sources */,
-				F5E144A71DE0E873001C7EBC /* ViewController.swift in Sources */,
+				F5A4757B1DE2101A00C15BE0 /* ImageCollectionViewController.swift in Sources */,
 				F50BFADE1DE0FE4700CA454D /* HTTPClient.swift in Sources */,
 				F5E144A51DE0E873001C7EBC /* AppDelegate.swift in Sources */,
 				F50BFAE61DE0FF8600CA454D /* Image500px.swift in Sources */,
@@ -532,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5A475721DE1303E00C15BE0 /* HTTPClientTests.swift in Sources */,
+				F5A4757F1DE2329C00C15BE0 /* ImageFetcherTests.swift in Sources */,
 				F5A475791DE13A1600C15BE0 /* DateHelperTests.swift in Sources */,
 				F5A475741DE1352300C15BE0 /* API500pxTests.swift in Sources */,
 				F5E144BD1DE0E873001C7EBC /* PhotoBrowser500pxTests.swift in Sources */,
