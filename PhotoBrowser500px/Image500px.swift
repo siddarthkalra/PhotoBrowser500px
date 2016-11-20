@@ -37,6 +37,6 @@ struct Image500px {
     let votesCount: Int
     let commentsCount: Int
     let nsfw: Bool
-    let imageURL: URL
+    let imageURL: String
     let feature: API500px.Feature
 }
