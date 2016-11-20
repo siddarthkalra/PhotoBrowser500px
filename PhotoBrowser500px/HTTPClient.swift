@@ -13,7 +13,7 @@ class HTTPClient {
     
     public struct HTTPResponse {
         let data: Dictionary<String, Any>?
-        let error: Error?
+        let error: HTTPResponseError?
     }
     
     enum HTTPResponseError: Error {
@@ -22,7 +22,7 @@ class HTTPClient {
         case validationFailure(internalError: Error)
     }
     
-    func request(_ url: String,
+    class func request(_ url: String,
                  method: HTTPMethod = .get,
                  parameters: [String: Any]? = nil,
                  completionHandler: @escaping (HTTPResponse) -> Void)
