@@ -8,9 +8,10 @@
 
 import UIKit
 
-class ImageCollectionViewController: UICollectionViewController {
+class ImageCollectionViewController: UICollectionViewController, ImageDetailViewControllerDelegate {
     
     // MARK: - Constants
+    static let SEGUE_ID_IMAGE_DETAIL = "imageDetailSegue"
     static let CELL_ID = "imageCell"
     static let TAG_CELL_IMAGE = 1
     static let FETCH_COUNT_DEFAULT = 20
@@ -25,6 +26,13 @@ class ImageCollectionViewController: UICollectionViewController {
     var category: API500px.Category = .notSet
     
     // MARK: - Private Members
+    
+    private var shouldReloadImageResults = true
+    private var imageToTransition: UIImageView? = nil
+    
+    lazy private var customTransitionDelegate: ImageTransitionDelegate = {
+        return ImageTransitionDelegate(image: self.imageToTransition!)
+    }()
     
     private var flowLayout: UICollectionViewFlowLayout {
         return collectionViewLayout as! UICollectionViewFlowLayout
@@ -107,12 +115,15 @@ class ImageCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        
+        // self.imageToTransition is the image we will use to animate the image that the user taps
+        // We can't directly use the images stored in the collectionView due to clipsToBounds not working
+        // Thus, we create this hidden view that will hold and subsequently animate the image that the user
+        // taps on.
+        let image = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 50.0, height: 50.0))
+        image.alpha = 0.0
+        self.view.addSubview(image)
+        self.imageToTransition = image
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -120,22 +131,29 @@ class ImageCollectionViewController: UICollectionViewController {
         
         self.recalculateItemSize(inBoundingSize: self.view.bounds.size)
         
-        debugPrint("Getting \(self.fetchCount) photos")
-        API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
-                           withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
-            if let error = response.error {
-                // error - show UI with the ability to refresh
-                // TODO
-            }
-            else if let result = response.images {
-                self.imageResults = result
-                self.collectionView?.reloadData()
-            }
-            else {
-                // response was nil - show UI with the ability to refresh
-                // TODO
-            }
-        })
+        if self.shouldReloadImageResults {
+            debugPrint("Getting \(self.fetchCount) photos")
+            API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
+                               withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
+                if let error = response.error {
+                    // error - show UI with the ability to refresh
+                    // TODO
+                }
+                else if let result = response.images {
+                    self.imageResults = result
+                    self.collectionView?.reloadData()
+                }
+                else {
+                    // response was nil - show UI with the ability to refresh
+                    // TODO
+                }
+            })
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.shouldReloadImageResults = true
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -176,7 +194,7 @@ class ImageCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewController.CELL_ID, for: indexPath)
-    
+        
         let image500px = self.imageResults[indexPath.row]
         imageFetcher.fetchImage(urlString: image500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
             if let error = response.error {
@@ -195,42 +213,39 @@ class ImageCollectionViewController: UICollectionViewController {
 
     // MARK: UICollectionViewDelegate
     
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            if let imageView = self.imageView(withCell: cell) {
+                self.imageToTransition?.image = imageView.image
+                // convert to the coordinate system used by the superview of self.imageToTransition, which is self.view
+                self.imageToTransition?.frame = self.view.convert(collectionView.layoutAttributesForItem(at: indexPath)!.frame, from: self.collectionView)
+                
+                self.performSegue(withIdentifier: ImageCollectionViewController.SEGUE_ID_IMAGE_DETAIL, sender: indexPath)
+            }
+        }
     }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    // MARK: ImageDetailViewControllerDelegate
+    
+    internal func willDismissDetailVC() {
+        self.shouldReloadImageResults = false
     }
-    */
 
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using [segue destinationViewController].
+        // Pass the selected object to the new view controller.
+        
+        let destVC = segue.destination
+        if segue.identifier == ImageCollectionViewController.SEGUE_ID_IMAGE_DETAIL {
+            let transitionDelegate = self.customTransitionDelegate
+            transitionDelegate.imageToTransition = self.imageToTransition!
+            destVC.transitioningDelegate = transitionDelegate
+            destVC.modalPresentationStyle = .fullScreen
+            (destVC as! ImageDetailViewController).detailImage = self.imageToTransition?.image
+            (destVC as! ImageDetailViewController).delegate = self
+        }
+    }
 }

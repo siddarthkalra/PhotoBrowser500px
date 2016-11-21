@@ -43,8 +43,6 @@ class HTTPClient {
         Alamofire.request(url, method: .get, parameters: parameters).validate().responseData { (response: DataResponse<Data>) in
             switch response.result {
             case .success:
-                debugPrint("Validation Successful")
-                
                 if let data = response.result.value {
                     completionHandler(HTTPDataResponse(data: data, error: nil))
                 }

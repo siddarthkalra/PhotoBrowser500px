@@ -11,6 +11,7 @@ import UIKit
 class CategoryListViewController: UITableViewController {
 
     // MARK: - Constants
+    
     static let SEGUE_ID = "imageCollectionSegue"
     static let CELL_ID_FEATURE = "featureCell"
     static let CELL_ID_CATEGORY = "categoryCell"
@@ -75,7 +76,7 @@ class CategoryListViewController: UITableViewController {
         if self.categories.first == .notSet {
             self.categories.remove(at: 0)
         }
-        
+
         for category in self.categories
         {
             // I tried to send out a request that included all categories but the API wouldn't return a result that
@@ -94,8 +95,6 @@ class CategoryListViewController: UITableViewController {
                         }
                         break
                     }
-                                    
-                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: CategoryListViewController.SECTION_CATEGORIES)], with: .automatic)
                 }
                 else {
                     // response was nil - show UI with the ability to refresh
