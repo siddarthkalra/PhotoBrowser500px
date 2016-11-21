@@ -26,6 +26,8 @@ class CategoryListViewController: UITableViewController {
     
     var features: [API500px.Feature] = API500px.Feature.allCases
     var categories: [API500px.Category] = API500px.Category.allCases
+    var categoryImages: [API500px.Category: Image500px] = [:]
+    let imageFetcher = ImageFetcher()
     
     // MARK: - Private Members
     
@@ -39,6 +41,28 @@ class CategoryListViewController: UITableViewController {
             return nil
         }
     }
+    
+    private func setupImageView(in tableView: UITableView, image: UIImage?, imageFetcherTag: Any?) {
+        if let retrievedImageIndexPath = imageFetcherTag
+        {
+            if retrievedImageIndexPath is IndexPath {
+                if let retrievedCell = tableView.cellForRow(at: retrievedImageIndexPath as! IndexPath) {
+                    if let imageView = self.imageView(withCell: retrievedCell, tag: CategoryListViewController.TAG_CATEGORY_IMAGE) {
+                        imageView.image = image
+                    }
+                    else {
+                        debugPrint("Image view not found in cell")
+                    }
+                }
+            }
+            else {
+                debugPrint("Tag is not an index path")
+            }
+        }
+        else {
+            debugPrint("Tag is nil")
+        }
+    }
 
     // MARK: - View Life Cycle
     
@@ -50,6 +74,34 @@ class CategoryListViewController: UITableViewController {
         }
         if self.categories.first == .notSet {
             self.categories.remove(at: 0)
+        }
+        
+        for category in self.categories
+        {
+            // I tried to send out a request that included all categories but the API wouldn't return a result that
+            // included at least one image from each category so instead, I'm sending 1 request per category
+            API500px.getPhotos(withFeature: .popular, withCategories: [category],
+                               withSize: .twoHundred, withResultCount: 1,
+                               completionHandler: { (response: API500px.APIImageResponse) -> Void in
+                if let error = response.error {
+                    // error - show UI with the ability to refresh
+                    // TODO
+                }
+                else if let result = response.images {
+                    for imageResult in result {
+                        if self.categoryImages[imageResult.category] == nil {
+                            self.categoryImages[imageResult.category] = imageResult
+                        }
+                        break
+                    }
+                                    
+                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: CategoryListViewController.SECTION_CATEGORIES)], with: .automatic)
+                }
+                else {
+                    // response was nil - show UI with the ability to refresh
+                    // TODO
+                }
+            })
         }
     }
 
@@ -89,8 +141,21 @@ class CategoryListViewController: UITableViewController {
             thumbnail?.layer.cornerRadius = (thumbnail?.frame.size.width)! / 2.0;
             thumbnail?.layer.masksToBounds = true;
             
+            let category: API500px.Category = self.categories[indexPath.row]
             if let label = cell?.viewWithTag(CategoryListViewController.TAG_CATEGORY_LABEL) {
-                (label as! UILabel).text = self.categories[indexPath.row].description
+                (label as! UILabel).text = category.description
+            }
+            
+            if let categoryImage500px = self.categoryImages[category] {
+                imageFetcher.fetchImage(urlString: categoryImage500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
+                    if let error = response.error {
+                        // failure
+                        debugPrint("error in retrieving image: \(error)")
+                    }
+                    else {
+                        self.setupImageView(in: tableView, image: response.image, imageFetcherTag: response.tag)
+                    }
+                })
             }
             
             break
