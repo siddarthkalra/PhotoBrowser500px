@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,7 +14,7 @@
         <scene sceneID="AvO-db-RIl">
             <objects>
                 <collectionViewController id="fFS-y4-wCx" customClass="ImageCollectionViewController" customModule="PhotoBrowser500px" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="3LO-VM-cLd">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="3LO-VM-cLd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -64,7 +65,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="featureCategoryCell" textLabel="MEu-LQ-fc0" style="IBUITableViewCellStyleDefault" id="PG9-Jf-Ge7">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="featureCell" textLabel="MEu-LQ-fc0" style="IBUITableViewCellStyleDefault" id="PG9-Jf-Ge7">
                                 <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PG9-Jf-Ge7" id="XBf-jP-mOJ">
@@ -81,6 +82,35 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="categoryCell" rowHeight="80" id="YEp-Q0-dNr">
+                                <rect key="frame" x="0.0" y="100" width="375" height="80"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YEp-Q0-dNr" id="UDn-eh-92h">
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="79"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8JK-Ou-EPo">
+                                            <rect key="frame" x="8" y="4" width="71.5" height="71.5"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="8JK-Ou-EPo" secondAttribute="height" multiplier="1:1" id="wEB-tG-Vyg"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HFe-gB-DU7">
+                                            <rect key="frame" x="87" y="29" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="8JK-Ou-EPo" firstAttribute="leading" secondItem="UDn-eh-92h" secondAttribute="leading" constant="8" id="H3G-e2-yIJ"/>
+                                        <constraint firstAttribute="bottom" secondItem="8JK-Ou-EPo" secondAttribute="bottom" constant="4" id="LXH-ED-g0F"/>
+                                        <constraint firstItem="HFe-gB-DU7" firstAttribute="leading" secondItem="8JK-Ou-EPo" secondAttribute="trailing" constant="8" id="O5N-7B-H3X"/>
+                                        <constraint firstItem="8JK-Ou-EPo" firstAttribute="top" secondItem="UDn-eh-92h" secondAttribute="top" constant="4" id="htP-fV-uBT"/>
+                                        <constraint firstItem="HFe-gB-DU7" firstAttribute="centerY" secondItem="8JK-Ou-EPo" secondAttribute="centerY" id="uft-eb-QNT"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="ZFH-ZL-hf5" id="ZHL-ZX-LhL"/>
@@ -94,7 +124,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LSA-Cm-DzZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="980" y="142"/>
+            <point key="canvasLocation" x="980" y="141.67916041979012"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Zir-rc-JFB">

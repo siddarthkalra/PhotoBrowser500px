@@ -12,14 +12,33 @@ class CategoryListViewController: UITableViewController {
 
     // MARK: - Constants
     static let SEGUE_ID = "imageCollectionSegue"
-    static let CELL_ID = "featureCategoryCell"
+    static let CELL_ID_FEATURE = "featureCell"
+    static let CELL_ID_CATEGORY = "categoryCell"
+    
     static let SECTION_FEATURES = 0
     static let SECTION_CATEGORIES = 1
+    static let TAG_CATEGORY_IMAGE = 1
+    static let TAG_CATEGORY_LABEL = 2
     
     // MARK: - Public Members
     
     var features: [API500px.Feature] = API500px.Feature.allCases
     var categories: [API500px.Category] = API500px.Category.allCases
+    
+    // MARK: - Private Members
+    
+    private func imageView(withCell cell: UITableViewCell, tag: Int) -> UIImageView? {
+        let cellSubviewOptional = cell.viewWithTag(tag)
+        
+        if let cellSubview = cellSubviewOptional {
+            return cellSubview as? UIImageView
+        }
+        else {
+            return nil
+        }
+    }
+
+    // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,22 +69,35 @@ class CategoryListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewController.CELL_ID, for: indexPath)
+        let cell: UITableViewCell?
 
         switch indexPath.section {
         case CategoryListViewController.SECTION_FEATURES:
+            cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewController.CELL_ID_FEATURE, for: indexPath)
+            
             var featureDescription = self.features[indexPath.row].description
             featureDescription = featureDescription.replacingOccurrences(of: "_", with: " ").capitalized
-            cell.textLabel?.text = featureDescription
+            cell?.textLabel?.text = featureDescription
             break
         case CategoryListViewController.SECTION_CATEGORIES:
-            cell.textLabel?.text = self.categories[indexPath.row].description
+            cell = tableView.dequeueReusableCell(withIdentifier: CategoryListViewController.CELL_ID_CATEGORY, for: indexPath)
+            
+            let thumbnail = self.imageView(withCell: cell!, tag: CategoryListViewController.TAG_CATEGORY_IMAGE)
+            thumbnail?.image = UIImage(named: "defaultImage")
+            thumbnail?.layer.cornerRadius = (thumbnail?.frame.size.width)! / 2.0;
+            thumbnail?.layer.masksToBounds = true;
+            
+            if let label = cell?.viewWithTag(CategoryListViewController.TAG_CATEGORY_LABEL) {
+                (label as! UILabel).text = self.categories[indexPath.row].description
+            }
+            
             break
         default:
+            cell = nil
             break
         }
 
-        return cell
+        return cell!
     }
     
     // MARK: - Table View Delegate Methods
@@ -82,6 +114,15 @@ class CategoryListViewController: UITableViewController {
             return "Categories"
         default:
             return ""
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case CategoryListViewController.SECTION_CATEGORIES:
+            return 80.0
+        default:
+            return tableView.rowHeight
         }
     }
 
