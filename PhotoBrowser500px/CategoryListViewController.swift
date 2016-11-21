@@ -15,10 +15,12 @@ class CategoryListViewController: UITableViewController {
     static let CELL_ID_FEATURE = "featureCell"
     static let CELL_ID_CATEGORY = "categoryCell"
     
+    static let SECTION_COUNT = 2
     static let SECTION_FEATURES = 0
     static let SECTION_CATEGORIES = 1
     static let TAG_CATEGORY_IMAGE = 1
     static let TAG_CATEGORY_LABEL = 2
+    static let CELL_HEIGHT_CATEGORY: CGFloat = 80.0
     
     // MARK: - Public Members
     
@@ -54,7 +56,7 @@ class CategoryListViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return CategoryListViewController.SECTION_COUNT
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -120,7 +122,7 @@ class CategoryListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case CategoryListViewController.SECTION_CATEGORIES:
-            return 80.0
+            return CategoryListViewController.CELL_HEIGHT_CATEGORY
         default:
             return tableView.rowHeight
         }
