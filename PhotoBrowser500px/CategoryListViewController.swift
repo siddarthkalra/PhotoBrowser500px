@@ -77,13 +77,17 @@ class CategoryListViewController: UITableViewController {
             self.categories.remove(at: 0)
         }
 
+        let getPhotoDispatchGroup = DispatchGroup()
         for category in self.categories
         {
             // I tried to send out a request that included all categories but the API wouldn't return a result that
             // included at least one image from each category so instead, I'm sending 1 request per category
+            getPhotoDispatchGroup.enter()
             API500px.getPhotos(withFeature: .popular, withCategories: [category],
                                withSize: .twoHundred, withResultCount: 1,
                                completionHandler: { (response: API500px.APIImageResponse) -> Void in
+                getPhotoDispatchGroup.leave()
+                                
                 if let error = response.error {
                     // error - show UI with the ability to refresh
                     // TODO
@@ -102,6 +106,10 @@ class CategoryListViewController: UITableViewController {
                 }
             })
         }
+        
+        getPhotoDispatchGroup.notify(queue: .main, execute: {
+            self.tableView.reloadSections(IndexSet(integer: CategoryListViewController.SECTION_CATEGORIES), with: .automatic)
+        })
     }
 
     // MARK: - Table view data source
