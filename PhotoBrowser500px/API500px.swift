@@ -166,7 +166,7 @@ class API500px {
     // Runs asynchronously on a background thread
     // Results are also returned on a background thread
     class func getPhotos(withFeature feature: Feature = .freshToday,
-                         withCategory category: Category = .notSet,
+                         withCategories categories: [Category]? = nil,
                          withSize size: ImageSize = .fourHundredForty,
                          withResultCount resultCount: Int = -1,
                          withQos qos: DispatchQoS.QoSClass = .userInitiated,
@@ -177,9 +177,16 @@ class API500px {
                                                        API500px.kFEATURE: feature.description,
                                                        API500px.kIMAGE_SIZE: size.rawValue,
                                                        API500px.kEXCLUDE: "Nude"]
-            if category != .notSet {
-                parameters[API500px.kONLY] = category.description
+            if let categoryValues = categories {
+                var categoryStrs: [String] = []
+                
+                for category: Category in categoryValues {
+                    categoryStrs.append(category.description)
+                }
+                
+                parameters[API500px.kONLY] = categoryStrs.joined(separator: ",")
             }
+            
             if resultCount > 0 {
                 var actualResultCount = resultCount
                 

@@ -83,8 +83,6 @@ class HTTPClient {
         Alamofire.request(url, method: method, parameters: parameters).validate().responseJSON { (response: DataResponse<Any>) in
             switch response.result {
             case .success:
-                debugPrint("Validation Successful")
-                
                 if let json = response.result.value {
                     if json is Dictionary<String, Any>
                     {
@@ -106,6 +104,7 @@ class HTTPClient {
                 break
             case .failure(let error):
                 debugPrint(error)
+                debugPrint(response.request)
                 let error = HTTPResponseError.validationFailure(internalError: error)
                 completionHandler(HTTPResponse(data: nil, error: error))
                 

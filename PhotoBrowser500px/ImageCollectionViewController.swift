@@ -121,7 +121,7 @@ class ImageCollectionViewController: UICollectionViewController {
         self.recalculateItemSize(inBoundingSize: self.view.bounds.size)
         
         debugPrint("Getting \(self.fetchCount) photos")
-        API500px.getPhotos(withFeature: self.feature, withCategory: self.category,
+        API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
                            withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
             if let error = response.error {
                 // error - show UI with the ability to refresh

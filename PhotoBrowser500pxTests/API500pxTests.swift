@@ -94,7 +94,7 @@ class API500pxTests: XCTestCase {
         
         let asyncExpectation = expectation(description: "API500px Popular animals with size 2")
         
-        API500px.getPhotos(withFeature: .popular, withCategory: .animals, withSize: .two, completionHandler: { (response: API500px.APIImageResponse) -> Void in
+        API500px.getPhotos(withFeature: .popular, withCategories: [.animals], withSize: .two, completionHandler: { (response: API500px.APIImageResponse) -> Void in
             XCTAssertTrue(response.images != nil)
             XCTAssertTrue(response.error == nil)
             XCTAssertTrue((response.images?.count)! > 0)
@@ -125,6 +125,46 @@ class API500pxTests: XCTestCase {
             XCTAssertTrue(response.images?.first?.curSize == API500px.ImageSize.two)
             XCTAssertTrue(response.images?.first?.feature == API500px.Feature.popular)
             
+            asyncExpectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 35) { error in
+            if let error = error {
+                XCTFail("waitForExpectations error: \(error)")
+            }
+        }
+    }
+    
+    func testGetPhotosWithMultipleCategories() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        let asyncExpectation = expectation(description: "API500px Multiple categories")
+        
+        API500px.getPhotos(withCategories: [.animals, .abstract, .blackAndWhite, .cityAndArchitecture],
+                           withSize: .two,
+                           completionHandler: { (response: API500px.APIImageResponse) -> Void in
+            XCTAssertTrue(response.images != nil)
+            XCTAssertTrue(response.error == nil)
+            XCTAssertTrue((response.images?.count)! > 0)
+            XCTAssertTrue(response.images?.first?.curSize == API500px.ImageSize.two)
+            
+            XCTAssertTrue((response.images?.contains(where: { (img: Image500px) -> Bool in
+                return img.category == .animals
+            }))!)
+
+            XCTAssertTrue((response.images?.contains(where: { (img: Image500px) -> Bool in
+                return img.category == .abstract
+            }))!)
+        
+            XCTAssertTrue((response.images?.contains(where: { (img: Image500px) -> Bool in
+                return img.category == .blackAndWhite
+            }))!)
+
+            XCTAssertTrue((response.images?.contains(where: { (img: Image500px) -> Bool in
+                return img.category == .cityAndArchitecture
+            }))!)
+
             asyncExpectation.fulfill()
         })
         
