@@ -53,8 +53,7 @@ class ImageTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             })
             fromView.removeConstraints(removeConstraints)
 
-            
-            
+            // NOTE: These constraints must match the constraints of the image viewing controller used by the toVC object
             fromView.addConstraint(NSLayoutConstraint(item: self.imageToTransition,
                                                       attribute: .leading,
                                                       relatedBy: .equal,
