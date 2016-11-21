@@ -58,6 +58,7 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     // MARK: - Private Methods
     
     func recalculateItemSize(inBoundingSize size: CGSize) {
+        debugPrint("Calling recalculateItemSize")
         let layout = self.flowLayout
         layout.minimumLineSpacing = 1
         layout.minimumInteritemSpacing = 1
@@ -73,8 +74,8 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
         self.imageSize = CGSize(width: itemSize.width * scale, height: itemSize.height * scale);
         
         // determine the amount of images to fetch according to screen dimensions and itemSize
-        let maxRows = sizeWithSectionInset.height / itemInfo.itemSize.height
-        let maxCols = sizeWithSectionInset.width / itemInfo.itemSize.width
+        let maxRows = sizeWithSectionInset.height / itemSize.height
+        let maxCols = sizeWithSectionInset.width / itemSize.width
         self.fetchCount = Int(maxRows * maxCols) + ImageCollectionViewController.FETCH_COUNT_DEFAULT
     }
 
@@ -100,6 +101,9 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
                     else {
                         debugPrint("Image view not found in cell")
                     }
+                }
+                else {
+                    debugPrint("Cell not found for path \(retrievedImageIndexPath)")
                 }
             }
             else {
@@ -157,7 +161,7 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        
+        debugPrint("Called viewWillTransition")
         self.recalculateItemSize(inBoundingSize: size)
         if view.window == nil {
             view.frame = CGRect(origin: view.frame.origin, size: size)
@@ -194,9 +198,23 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewController.CELL_ID, for: indexPath)
+        debugPrint("cellForItemAt indexPath \(indexPath)")
+        
+        // Get image view
+        var imageView: UIImageView? = nil
+        if let cellImageView = cell.viewWithTag(ImageCollectionViewController.TAG_CELL_IMAGE) {
+            if cellImageView is UIImageView {
+                imageView = (cellImageView as! UIImageView)
+                imageView?.image = nil
+            }
+        }
         
         let image500px = self.imageResults[indexPath.row]
-        imageFetcher.fetchImage(urlString: image500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
+        // prepopulate with default
+        imageView?.image = UIImage(named: "defaultImage")
+        
+        // fetch image
+        self.imageFetcher.fetchImage(urlString: image500px.imageURL, tag: indexPath, completionHandler: { (response: ImageFetcher.ImageFetcherResponse) in
             if let error = response.error {
                 // failure
                 // TODO show error to user?
@@ -210,8 +228,26 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     
         return cell
     }
-
+    
     // MARK: UICollectionViewDelegate
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        // Get image view
+        var imageView: UIImageView? = nil
+        
+        if let cellImageView = cell.viewWithTag(ImageCollectionViewController.TAG_CELL_IMAGE) {
+            if cellImageView is UIImageView {
+                imageView = (cellImageView as! UIImageView)
+                
+                let image500px = self.imageResults[indexPath.row]
+                // use cache if possible
+                if let cachedImage = self.imageFetcher.cache[URL(string:image500px.imageURL)!] {
+                    imageView?.image = cachedImage
+                    debugPrint("using cache for indexPath \(indexPath)")
+                }
+            }
+        }
+    }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {

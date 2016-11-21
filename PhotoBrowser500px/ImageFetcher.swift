@@ -30,7 +30,7 @@ class ImageFetcher: NSObject {
     
     // MARK: - Private Members
     
-    private var cache: [URL: UIImage]
+    private(set) public var cache: [URL: UIImage]
     
     // MARK: - Constructors
     
