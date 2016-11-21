@@ -50,7 +50,7 @@ class API500px {
         case freshYesterday = "fresh_yesterday"
         case freshWeek = "fresh_week"
         
-        var description : String {
+        var description: String {
             switch self {
             case .notSet: return "Not set"
             case .popular: return "popular"
@@ -61,6 +61,11 @@ class API500px {
             case .freshYesterday: return "fresh_yesterday"
             case .freshWeek: return "fresh_week"
             }
+        }
+        
+        static var allCases: [Feature] {
+            return [.notSet, .popular, .highestRated, .upcoming,
+                    .editors, .freshToday, .freshYesterday, .freshWeek]
         }
     }
     
@@ -95,7 +100,7 @@ class API500px {
         case urbanExploration = 27
         case wedding = 25
         
-        var description : String {
+        var description: String {
             switch self {
             case .notSet: return "Not set"
             case .uncategorized: return "Uncategorized"
@@ -127,6 +132,13 @@ class API500px {
             case .urbanExploration: return "Urban Exploration"
             case .wedding: return "Wedding"
             }
+        }
+        
+        static var allCases: [Category] {
+            return [.notSet, .uncategorized, .abstract, .animals, .blackAndWhite, .celebrities, .cityAndArchitecture,
+                    .commercial, .concert, .family, .fashion, .film, .fineArt, .food, .journalism, .landscapes,
+                    .macro, .nature, .nude, .people, .performingArts, .sport, .stillLife, .street, .transportation,
+                    .travel, .underwater, .urbanExploration, .wedding]
         }
     }
     

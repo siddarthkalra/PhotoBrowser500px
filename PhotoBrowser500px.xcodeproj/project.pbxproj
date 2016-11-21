@@ -21,6 +21,7 @@
 		F5A4757B1DE2101A00C15BE0 /* ImageCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */; };
 		F5A4757D1DE219CC00C15BE0 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757C1DE219CC00C15BE0 /* ImageFetcher.swift */; };
 		F5A4757F1DE2329C00C15BE0 /* ImageFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A4757E1DE2329C00C15BE0 /* ImageFetcherTests.swift */; };
+		F5A475811DE2813800C15BE0 /* CategoryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A475801DE2813800C15BE0 /* CategoryListViewController.swift */; };
 		F5E144A51DE0E873001C7EBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E144A41DE0E873001C7EBC /* AppDelegate.swift */; };
 		F5E144AA1DE0E873001C7EBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5E144A81DE0E873001C7EBC /* Main.storyboard */; };
 		F5E144AD1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5E144AB1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld */; };
@@ -67,6 +68,7 @@
 		F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewController.swift; sourceTree = "<group>"; };
 		F5A4757C1DE219CC00C15BE0 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
 		F5A4757E1DE2329C00C15BE0 /* ImageFetcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcherTests.swift; sourceTree = "<group>"; };
+		F5A475801DE2813800C15BE0 /* CategoryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryListViewController.swift; sourceTree = "<group>"; };
 		F5E144A11DE0E873001C7EBC /* PhotoBrowser500px.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoBrowser500px.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5E144A41DE0E873001C7EBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5E144A91DE0E873001C7EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				F5E144A81DE0E873001C7EBC /* Main.storyboard */,
 				F5E144B01DE0E873001C7EBC /* LaunchScreen.storyboard */,
 				F5A4757A1DE2101A00C15BE0 /* ImageCollectionViewController.swift */,
+				F5A475801DE2813800C15BE0 /* CategoryListViewController.swift */,
 			);
 			name = UserInterface;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5A475811DE2813800C15BE0 /* CategoryListViewController.swift in Sources */,
 				F50BFAE41DE0FECD00CA454D /* API500px.swift in Sources */,
 				F5A475761DE137A800C15BE0 /* DateHelper.swift in Sources */,
 				F5E144AD1DE0E873001C7EBC /* PhotoBrowser500px.xcdatamodeld in Sources */,

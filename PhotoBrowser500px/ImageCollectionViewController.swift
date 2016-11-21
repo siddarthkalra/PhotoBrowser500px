@@ -21,6 +21,8 @@ class ImageCollectionViewController: UICollectionViewController {
     let imageFetcher = ImageFetcher()
     var imageSize: CGSize = CGSize.zero
     var fetchCount: Int = FETCH_COUNT_DEFAULT
+    var feature: API500px.Feature = .freshToday
+    var category: API500px.Category = .notSet
     
     // MARK: - Private Members
     
@@ -119,7 +121,8 @@ class ImageCollectionViewController: UICollectionViewController {
         self.recalculateItemSize(inBoundingSize: self.view.bounds.size)
         
         debugPrint("Getting \(self.fetchCount) photos")
-        API500px.getPhotos(withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
+        API500px.getPhotos(withFeature: self.feature, withCategory: self.category,
+                           withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
             if let error = response.error {
                 // error - show UI with the ability to refresh
                 // TODO
