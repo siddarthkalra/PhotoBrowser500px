@@ -102,7 +102,7 @@ class HTTPClient {
                 break
             case .failure(let error):
                 debugPrint(error)
-                debugPrint(response.request)
+                debugPrint(response.request!)
                 let error = HTTPResponseError.validationFailure(internalError: error)
                 completionHandler(HTTPResponse(data: nil, error: error))
                 
