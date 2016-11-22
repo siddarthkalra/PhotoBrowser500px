@@ -58,7 +58,6 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     // MARK: - Private Methods
     
     func recalculateItemSize(inBoundingSize size: CGSize) {
-        debugPrint("Calling recalculateItemSize")
         let layout = self.flowLayout
         layout.minimumLineSpacing = 1
         layout.minimumInteritemSpacing = 1
@@ -103,7 +102,7 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
                     }
                 }
                 else {
-                    debugPrint("Cell not found for path \(retrievedImageIndexPath)")
+                    //debugPrint("Cell not found for path \(retrievedImageIndexPath)")
                 }
             }
             else {
@@ -115,10 +114,49 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
         }
     }
     
+    private func loadDataAsync(isLoadMoreAction: Bool = false) {
+        if self.shouldReloadImageResults {
+            debugPrint("Getting \(self.fetchCount) photos")
+            API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
+                               withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
+                                if let error = response.error {
+                                    // error - show UI with the ability to refresh
+                                    // TODO
+                                }
+                                else if let result = response.images {
+                                    if isLoadMoreAction {
+                                        let oldResults = self.imageResults
+                                        let newResults = result
+                                        let oldNewResults = oldResults + newResults
+                                        
+                                        self.imageResults = oldNewResults
+                                        
+                                        let oldResultsCount = oldResults.count
+                                        let insertIndexPaths = newResults.enumerated().map({ (index: Int, imageInfo: Image500px) -> IndexPath in
+                                            return IndexPath(row: oldResultsCount + index, section: 0)
+                                        })
+
+                                        self.collectionView?.insertItems(at: insertIndexPaths)
+                                    }
+                                    else {
+                                        self.imageResults = result
+                                        self.collectionView?.reloadData()
+                                    }
+                                }
+                                else {
+                                    // response was nil - show UI with the ability to refresh
+                                    // TODO
+                                }
+            })
+        }
+    }
+    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = self.category == .notSet ? self.feature.description : self.category.description
         
         // self.imageToTransition is the image we will use to animate the image that the user taps
         // We can't directly use the images stored in the collectionView due to clipsToBounds not working
@@ -134,25 +172,7 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
         super.viewWillAppear(animated)
         
         self.recalculateItemSize(inBoundingSize: self.view.bounds.size)
-        
-        if self.shouldReloadImageResults {
-            debugPrint("Getting \(self.fetchCount) photos")
-            API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
-                               withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
-                if let error = response.error {
-                    // error - show UI with the ability to refresh
-                    // TODO
-                }
-                else if let result = response.images {
-                    self.imageResults = result
-                    self.collectionView?.reloadData()
-                }
-                else {
-                    // response was nil - show UI with the ability to refresh
-                    // TODO
-                }
-            })
-        }
+        self.loadDataAsync()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -161,7 +181,6 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        debugPrint("Called viewWillTransition")
         self.recalculateItemSize(inBoundingSize: size)
         if view.window == nil {
             view.frame = CGRect(origin: view.frame.origin, size: size)
@@ -198,7 +217,6 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewController.CELL_ID, for: indexPath)
-        debugPrint("cellForItemAt indexPath \(indexPath)")
         
         // Get image view
         var imageView: UIImageView? = nil
@@ -243,9 +261,13 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
                 // use cache if possible
                 if let cachedImage = self.imageFetcher.cache[URL(string:image500px.imageURL)!] {
                     imageView?.image = cachedImage
-                    debugPrint("using cache for indexPath \(indexPath)")
                 }
             }
+        }
+        
+        if indexPath.item == (self.imageResults.count-1) {
+            debugPrint("!!!!!!LOAD MORE DATA!!!!!")
+            self.loadDataAsync(isLoadMoreAction: true)
         }
     }
     
