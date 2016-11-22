@@ -156,7 +156,9 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = self.category == .notSet ? self.feature.description : self.category.description
+        self.title = self.category == .notSet
+            ? self.feature.description.replacingOccurrences(of: "_", with: " ").capitalized
+            : self.category.description
         
         // self.imageToTransition is the image we will use to animate the image that the user taps
         // We can't directly use the images stored in the collectionView due to clipsToBounds not working
