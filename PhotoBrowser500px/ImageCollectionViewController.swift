@@ -188,14 +188,9 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
             view.frame = CGRect(origin: view.frame.origin, size: size)
             view.layoutIfNeeded()
         } else {
-            let indexPath = self.collectionView?.indexPathsForVisibleItems.last
             coordinator.animate(alongsideTransition: { ctx in
                 self.collectionView?.layoutIfNeeded()
-            }, completion: { _ in
-//                if self.layoutStyle == .oneUp, let indexPath = indexPath {
-//                    self.collectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
-//                }
-            })
+            }, completion: nil)
         }
         
         super.viewWillTransition(to: size, with: coordinator)
