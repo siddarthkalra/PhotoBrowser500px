@@ -299,8 +299,17 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
             transitionDelegate.imageToTransition = self.imageToTransition!
             destVC.transitioningDelegate = transitionDelegate
             destVC.modalPresentationStyle = .fullScreen
-            (destVC as! ImageDetailViewController).detailImage = self.imageToTransition?.image
-            (destVC as! ImageDetailViewController).delegate = self
+            
+            if destVC is ImageDetailViewController {
+                let detailDestVC = destVC as! ImageDetailViewController
+                detailDestVC.detailImage = self.imageToTransition?.image
+                detailDestVC.delegate = self
+        
+                if sender is IndexPath {
+                    let indexPath = sender as! IndexPath
+                    detailDestVC.detailImageInfo = self.imageResults[indexPath.row]
+                }
+            }
         }
     }
 }
