@@ -302,12 +302,14 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
             
             if destVC is ImageDetailViewController {
                 let detailDestVC = destVC as! ImageDetailViewController
+                detailDestVC.imageFetcher = self.imageFetcher
+                detailDestVC.imageResults = self.imageResults
                 detailDestVC.detailImage = self.imageToTransition?.image
                 detailDestVC.delegate = self
         
                 if sender is IndexPath {
                     let indexPath = sender as! IndexPath
-                    detailDestVC.detailImageInfo = self.imageResults[indexPath.row]
+                    detailDestVC.detailImageIndex = indexPath.row
                 }
             }
         }

@@ -63,7 +63,6 @@ class ImageFetcher: NSObject {
                         if let image = UIImage(data: data) {
                             
                             if let cachedImage = self.cache[url] {
-                                debugPrint("ImageFetcher cache activated")
                                 DispatchQueue.main.async {
                                     completionHandler(ImageFetcherResponse(image: cachedImage, tag: tag, error: nil))
                                 }
