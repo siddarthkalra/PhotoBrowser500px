@@ -115,8 +115,10 @@ class ImageCollectionViewController: UICollectionViewController, ImageDetailView
     }
     
     private func loadDataAsync(isLoadMoreAction: Bool = false) {
-        if self.shouldReloadImageResults {
+        if isLoadMoreAction || self.shouldReloadImageResults
+        {
             debugPrint("Getting \(self.fetchCount) photos")
+            
             API500px.getPhotos(withFeature: self.feature, withCategories: [self.category],
                                withResultCount: self.fetchCount, completionHandler: { (response: API500px.APIImageResponse) in
                                 if let error = response.error {
