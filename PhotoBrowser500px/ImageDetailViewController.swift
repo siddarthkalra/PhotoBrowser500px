@@ -12,7 +12,7 @@ protocol ImageDetailViewControllerDelegate {
     func willDismissDetailVC()
 }
 
-class ImageDetailViewController: UIViewController {
+class ImageDetailViewController: UIViewController, UIScrollViewDelegate {
 
     // MARK: - Constants
     
@@ -20,11 +20,15 @@ class ImageDetailViewController: UIViewController {
     static let TAG_LABEL_NAME = 2
     static let TAG_LABEL_VIEW_COUNT = 3
     static let TAG_LABEL_VOTE_COUNT = 4
+    static let TAG_SCROLL_VIEW = 5
     
     // MARK: - Public Members
+    
     var detailImage: UIImage? = nil
     var detailImageInfo: Image500px? = nil
     var delegate: ImageDetailViewControllerDelegate? = nil
+    
+    // MARK: - Private Members
     
     // MARK: - Event Handlers
     
@@ -46,12 +50,58 @@ class ImageDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        if let imageView = self.view.viewWithTag(ImageDetailViewController.TAG_CATEGORY_IMAGE) {
-            (imageView as! UIImageView).image = detailImage
-        }
         
+        // setup outer scrollview
+        if let scrollView = self.view.viewWithTag(ImageDetailViewController.TAG_SCROLL_VIEW) {
+            let actualScrollView = scrollView as! UIScrollView
+            actualScrollView.delegate = self
+            actualScrollView.maximumZoomScale = 2.0
+            actualScrollView.translatesAutoresizingMaskIntoConstraints = false
+            
+            let imageView = UIImageView()
+            imageView.tag = ImageDetailViewController.TAG_CATEGORY_IMAGE
+            imageView.image = self.detailImage
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            
+            scrollView.addSubview(imageView)
+            
+            scrollView.addConstraint(NSLayoutConstraint(item: imageView,
+                                                        attribute: .leading,
+                                                        relatedBy: .equal,
+                                                        toItem: scrollView,
+                                                        attribute: .leading,
+                                                        multiplier: 1.0,
+                                                        constant: 0.0))
+            scrollView.addConstraint(NSLayoutConstraint(item: imageView,
+                                                        attribute: .trailing,
+                                                        relatedBy: .equal,
+                                                        toItem: scrollView,
+                                                        attribute: .trailing,
+                                                        multiplier: 1.0,
+                                                        constant: 0.0))
+            scrollView.addConstraint(NSLayoutConstraint(item: imageView,
+                                                        attribute: .centerY,
+                                                        relatedBy: .equal,
+                                                        toItem: scrollView,
+                                                        attribute: .centerY,
+                                                        multiplier: 1.0,
+                                                        constant: 0.0))
+            scrollView.addConstraint(NSLayoutConstraint(item: imageView,
+                                                        attribute: .height,
+                                                        relatedBy: .equal,
+                                                        toItem: scrollView,
+                                                        attribute: .height,
+                                                        multiplier: 1.0,
+                                                        constant: 0.0))
+            scrollView.addConstraint(NSLayoutConstraint(item: imageView,
+                                                        attribute: .width,
+                                                        relatedBy: .equal,
+                                                        toItem: scrollView,
+                                                        attribute: .width,
+                                                        multiplier: 1.0,
+                                                        constant: 0.0))
+        }
+
         if let nameLabel = self.view.viewWithTag(ImageDetailViewController.TAG_LABEL_NAME) {
             let label = nameLabel as! UILabel
             label.numberOfLines = 2
@@ -85,5 +135,11 @@ class ImageDetailViewController: UIViewController {
                 (voteCountLabel as! UILabel).text = "Unknown votes"
             }
         }
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return scrollView.viewWithTag(ImageDetailViewController.TAG_CATEGORY_IMAGE)
     }
 }
